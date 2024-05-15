@@ -1,10 +1,12 @@
-version: '3.8'
-
 services:
   gtaconnected:
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
     image: ghcr.io/plyrthn/gtaconnected-linux:main
     ports:
-      - "22000:22000" # Map port 22000 on the host to port 22000 in the container
+      - "23546:23546/tcp"
+      - "23546:23546/udp"  # If UDP is needed, ensure it's specified
     volumes:
-      - ./server.xml:/app/GTAC-Server-Linux-1.5.12.tar-1/server.xml # Adjust the path as needed
+      - ./server.xml:/app/GTAC-Server/server.xml # Adjust the path as needed
     restart: unless-stopped

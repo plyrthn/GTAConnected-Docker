@@ -13,10 +13,14 @@ jobs:
     strategy:
       matrix:
         include:
-          - dockerfile: linux/Dockerfile.x86_64
+          - dockerfile: Dockerfile
             tag: gtaconnected-linux
-          - dockerfile: linux/Dockerfile.arm64
+            os_type: Linux
+            arch_type: Linux-AMD64
+          - dockerfile: Dockerfile
             tag: gtaconnected-linux-arm64
+            os_type: Linux
+            arch_type: Linux-ARM64
 
     steps:
     - uses: actions/checkout@v2
@@ -37,4 +41,18 @@ jobs:
         context: .
         file: ${{ matrix.dockerfile }}
         push: true
-        tags: ghcr.io/plyrthn/${{ matrix.tag }}:latest
+        tags: |
+          ghcr.io/plyrthn/${{ matrix.tag }}:latest
+          ghcr.io/plyrthn/${{ matrix.tag }}:${{ github.sha }}
+        build-args: |
+          OS_TYPE=${{ matrix.os_type }}
+          ARCH_TYPE=${{ matrix.arch_type }}
+        cache-from: type=registry,ref=ghcr.io/plyrthn/${{ matrix.tag }}:cache
+        cache-to: type=inline
+
+    - name: Scan image for vulnerabilities
+      uses: aquasecurity/trivy-action@0.0.8
+      with:
+        image-ref: 'ghcr.io/plyrthn/${{ matrix.tag }}:latest'
+        format: 'table'
+        exit-code: '1'

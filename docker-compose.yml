@@ -5,8 +5,8 @@ services:
 #      dockerfile: Dockerfile
     image: ghcr.io/plyrthn/gtaconnected-linux:main
     ports:
-      - "23546:23546/tcp"
-      - "23546:23546/udp"  # If UDP is needed, ensure it's specified
+      - "23546:22000/tcp" # I plan to use this port since Syncthing uses the same.
+      - "23546:22000/udp"  # If UDP is needed, ensure it's specified
     volumes:
       - ./server.xml:/app/GTAC-Server/server.xml # Adjust the path as needed
     restart: unless-stopped

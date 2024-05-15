@@ -4,8 +4,12 @@ FROM ubuntu:latest
 # Set a working directory
 WORKDIR /app
 
-# Install required packages
-RUN apt-get update && apt-get install -y libstdc++6 openssl wget ca-certificates tar python3 python3.12-venv
+# Install only the necessary packages and clean up cache to reduce image size and potential attack surface
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends libstdc++6 openssl wget ca-certificates tar xz && \
+    apt-get upgrade -y && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 # Create and activate a virtual environment
 RUN python3 -m venv /app/venv

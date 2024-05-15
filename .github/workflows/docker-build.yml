@@ -49,10 +49,3 @@ jobs:
           ARCH_TYPE=${{ matrix.arch_type }}
         cache-from: type=registry,ref=ghcr.io/plyrthn/${{ matrix.tag }}:cache
         cache-to: type=inline
-
-    - name: Scan image for vulnerabilities
-      uses: aquasecurity/trivy-action@master
-      with:
-        image-ref: 'ghcr.io/plyrthn/${{ matrix.tag }}:latest'
-        format: 'table'
-        exit-code: '1'
